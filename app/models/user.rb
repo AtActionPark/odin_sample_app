@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
   attr_accessor :remember_token
+  has_many :microposts, dependent: :destroy
 
   before_save { self.email = email.downcase }
   validates :name, presence: true, length: { maximum: 50 }
@@ -38,5 +39,10 @@ class User < ActiveRecord::Base
   # Forgets a user
   def forget
     update_attribute(:remember_digest, nil)
+  end
+
+  # Defines a proto feed
+  def feed
+Micropost.where("user_id =?", id)
   end
 end
